@@ -181,7 +181,7 @@ class BithumbVolumeMonitor:
         
         # 각 종목 체크
         for i, symbol in enumerate(symbols, 1):
-            logger.info(f"[{i}/{len(symbols)}] {symbol} 체크 중...")
+            logger.debug(f"[{i}/{len(symbols)}] {symbol} 체크 중...")
             
             analysis = self.check_symbol_volume(symbol)
             
@@ -198,8 +198,10 @@ class BithumbVolumeMonitor:
             # API 호출 제한을 고려한 딜레이
             time.sleep(self.api_delay)
         
-        logger.info(f"모니터링 완료 - 총 {len(symbols)}개 종목 체크, {spike_count}개 거래량 급증 발견")
-        logger.info("=" * 60)
+        if spike_count > 0:
+            logger.info(f"모니터링 완료 - 총 {len(symbols)}개 종목 체크, {spike_count}개 거래량 급증 발견")
+        else:
+            logger.debug(f"모니터링 완료 - {len(symbols)}개 종목 이상 없음")
     
     def run_continuous(self):
         """지속적으로 모니터링 실행"""
